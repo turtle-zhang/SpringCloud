@@ -1,0 +1,33 @@
+server:
+  port: 7001
+
+eureka:
+  instance:
+    # hostname: localhost #eureka服务端的实例名称(单机版)
+    hostname: eureka7001.com #eureka服务端的实例名称
+  client:
+    #false表示不向注册中心注册自己。
+    register-with-eureka: false
+    #false表示自己端就是注册中心，我的职责就是维护服务实例，并不需要去检索服务
+    fetch-registry: false
+    service-url:
+      #设置与Eureka Server交互的地址查询服务和注册服务都需要依赖这个地址。
+
+      # #单机就是7001自己
+      # defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+      # #集群指向其它eureka的地址   xxxxxx/eureka/为固定格式
+      defaultZone: http://eureka7002.com:7002/eureka/
+
+  # Eureka服务端会检查最近15分钟内所有Eureka 实例正常心跳占比，
+  # 如果低于85%就会触发自我保护机制。触发了保护机制，
+  # Eureka将暂时把这些失效的服务保护起来，不让其过期，
+  # 但这些服务也并不是永远不会过期。Eureka在启动完成后，
+  # 每隔60秒会检查一次服务健康状态，如果这些被保护起来失效的服务过一段时间后（默认90秒）还是没有恢复，
+  # 就会把这些服务剔除。如果在此期间服务恢复了并且实例心跳占比高于85%时，就会自动关闭自我保护机制。
+  server:
+    #关闭自我保护机制，保证不可用服务被及时踢除
+    # 一般情况下，我们会选择在 开发环境下关闭自我保护机制，而在生产环境下启动自我保护机制。
+    enable-self-preservation: false
+    # 让服务端每隔2秒扫描一次，使服务能尽快的剔除，默认是60*1000
+    eviction-interval-timer-in-ms: 2000

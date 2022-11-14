@@ -1,0 +1,10 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: cloud-consumer-order
+  cloud:
+    #注册到zookeeper地址，如果是集群则通过逗号做分割
+    zookeeper:
+      connect-string: 175.178.69.88:2181

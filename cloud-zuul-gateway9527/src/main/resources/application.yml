@@ -1,0 +1,50 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-zuul-gateway
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+      #defaultZone: http://eureka7001.com:7001/eureka
+  instance:
+    instance-id: gateway-9527.com
+    prefer-ip-address: true
+
+zuul:
+  # prefix: /atguigu 设置统一前缀，需要根据业务要求决定是否需要添加
+  prefix: /atguigu
+
+  # 使用ignored-services进行原服务名访问失效，也可以通过*号正则匹配，包括所有
+  # ignored-services: cloud-provider-payment
+  ignored-services: "*"
+
+
+
+  routes: # 路由映射配置
+
+    mypayment.serviceId: cloud-provider-payment
+    # http://myzuul.com:9527/weixin/paymentinfo（不带前缀）
+    # http://myzuul.com:9527/atguigu/weixin/paymentinfo（带前缀）
+    # 访问域名中带weixin则会跳转到cloud-provider-payment服务中（注释不要加到配置后面！！！）
+    mypayment.path: /weixin/**
+
+
+    # http://myzuul.com:9527/mysms/xxxxx会被映射为访问http://myzuul.com:9527/cloud-provider-sms/xxxxx
+    mysms.serviceId: cloud-provider-sms
+    mysms.path: /mysms/**
+
+  # 配置是否开启zuul的过滤器
+  PreLogFilter:
+    pre:
+      disable: true
+
+# 开启查看路由的端点  http://localhost:9527/actuator/routes
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'routes'

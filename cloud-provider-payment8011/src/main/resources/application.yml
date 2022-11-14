@@ -1,0 +1,16 @@
+server:
+  port: 8011
+
+###服务名称(服务注册到eureka名称)
+spring:
+  application:
+    name: cloud-provider-payment
+
+eureka:
+  client: #服务提供者provider注册进eureka服务列表内
+    service-url:
+      register-with-eureka: true
+      fetch-registry: true
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+
+
